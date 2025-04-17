@@ -11,19 +11,15 @@ NAMESPACES=$(kubectl get ns -o jsonpath='{.items[*].metadata.name}')
 
 for ENV in "${ENVS[@]}"; do
   if echo "$NAMESPACES" | grep -qw "$ENV"; then
-    VALUES_FILE="$CHART_DIR/value-$ENV.yaml"
+    VALUES_FILE="$CHART_DIR/values-$ENV.yaml"
     if [[ -f "$VALUES_FILE" ]]; then
       echo "✅ Environment detected: $ENV"
+      echo "🚀 Deploying Helm chart using AWS Secrets Manager and preconfigured service account..."
 
-      read -s -p "🔐 Enter Redis password: " REDIS_PASSWORD
-      echo
-
-      kubectl create secret generic redis-secret         --namespace "$ENV"         --from-literal=REDIS_PASSWORD="$REDIS_PASSWORD"         --dry-run=client -o yaml | kubectl apply -f -
-
-      echo "✅ Redis password secret created."
-      echo "🚀 Deploying Helm chart..."
-
-      helm upgrade --install "$RELEASE_NAME" "$CHART_DIR"         --namespace "$ENV"         -f "$VALUES_FILE"         --create-namespace
+      helm upgrade --install "$RELEASE_NAME" "$CHART_DIR" \
+        --namespace "$ENV" \
+        -f "$VALUES_FILE" \
+        --create-namespace
 
       echo "✅ Deployment complete."
       exit 0
