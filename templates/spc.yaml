@@ -4,38 +4,16 @@ metadata:
   name: {{ .Chart.Name }}-{{ .Values.namespace }}-spc
   namespace: {{ .Values.namespace }}
 spec:
-  serviceAccountName: {{ .Values.serviceAccount.name }}
   provider: aws
-  secretObjects:
-    {{- if .Values.secretObjects.name }}
-      {{- range $key, $value := .Values.secretObjects.name }}
-      - secretName: {{ $value }}
-        type: Opaque
-        data:
-          - objectName: {{ $value }}
-            key: {{ $key }}
-      {{- end }}
-    {{- else }}
-      # No secrets provided, skip this section
-    {{- end }}
+  serviceAccountName: {{ .Values.serviceAccount.name }}
   parameters:
     objects: |
-      {{- if .Values.secretObjects.name }}
-        {{- $Spath := .Values.secretObjects.path }}
-        {{- range $keys, $values := .Values.secretObjects.name }}
-        - objectName: {{$Spath}}/{{$keys}}
-          objectType: secretsmanager
-          objectAlias: {{$values}}
-        {{- end }}
-      {{- else }}
-        # Skip if no secrets
-      {{- end }}
-
-
-      volumes:
-        - name: secrets-store
-          csi:
-            driver: secrets-store.csi.k8s.io
-            readOnly: true
-            volumeAttributes:
-              secretProviderClass: redis-aws-secrets
+      - objectName: "{{ .Values.namespace }}/coto-redis/config"
+        objectType: secretsmanager
+        objectAlias: "REDIS_PASSWORD"
+  secretObjects:
+    - secretName: {{ .Chart.Name }}-{{ .Values.namespace }}-secret
+      type: Opaque
+      data:
+        - objectName: "REDIS_PASSWORD"
+          key: REDIS_PASSWORD
