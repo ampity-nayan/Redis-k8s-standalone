@@ -17,12 +17,13 @@ This Helm chart deploys a Redis instance in Kubernetes for multiple environments
 ├── value-qa.yaml
 ├── value-preprod.yaml
 ├── value-prod.yaml
-├── pvc.yaml
-├── deployment.yaml
-├── hpa.yaml
-├── service.yaml
-├── spc.yaml
-├── NOTES.txt
+├── templates/
+│   ├── deployment.yaml
+│   ├── service.yaml
+│   ├── pvc.yaml
+│   ├── hpa.yaml
+│   ├── spc.yaml
+│   └── NOTES.txt
 └── deploy.sh
 
 ## 🚀 How to Deploy
@@ -55,3 +56,25 @@ This script will:
 - `gp3` for EBS
 - Secure secrets
 - Env-specific resources and scaling
+
+## 🔗 Access Redis From a Pod in Same Namespace
+If you're deploying your application in the same namespace where Redis is installed (e.g., `preprod`), then you can access Redis using:
+
+```
+coto-redis-eks:6379
+```
+
+This works because the Helm `service.yaml` uses a predictable name:
+```yaml
+name: {{ .Chart.Name }}-eks
+```
+
+No need for FQDN or cross-namespace DNS. Just use the short name in your app’s config.
+
+Example config:
+```env
+REDIS_HOST=coto-redis-eks
+REDIS_PORT=6379
+```
+
+Redis will require the password that was entered during `deploy.sh` execution.

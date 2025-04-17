@@ -15,11 +15,9 @@ for ENV in "${ENVS[@]}"; do
     if [[ -f "$VALUES_FILE" ]]; then
       echo "✅ Environment detected: $ENV"
 
-      # Ask for Redis password
       read -s -p "🔐 Enter Redis password: " REDIS_PASSWORD
       echo
 
-      # Create Kubernetes secret
       kubectl create secret generic redis-secret         --namespace "$ENV"         --from-literal=REDIS_PASSWORD="$REDIS_PASSWORD"         --dry-run=client -o yaml | kubectl apply -f -
 
       echo "✅ Redis password secret created."
