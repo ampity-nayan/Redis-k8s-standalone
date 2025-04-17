@@ -21,8 +21,8 @@ service:
   type: ClusterIP
   port: 6379
 serviceAccount:
-  create: false
-  name: preprod-sa
+    create: false
+    name: preprod-sa
 volume:
   name: secret-volume
   mountPath: /mnt/app/conf
