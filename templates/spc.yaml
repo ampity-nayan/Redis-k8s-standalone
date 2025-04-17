@@ -8,7 +8,7 @@ spec:
   serviceAccountName: {{ .Values.serviceAccount.name }}
   parameters:
     objects: |
-      - objectName: "{{ .Values.namespace }}/coto-redis/config"
+      - objectName: "{{ .Values.namespace }}/coto-redis/CONFIG"
         objectType: secretsmanager
         objectAlias: "REDIS_PASSWORD"
   secretObjects:
