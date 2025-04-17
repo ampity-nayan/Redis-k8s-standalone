@@ -1,0 +1,52 @@
+namespace: qa
+labels:
+  app: coto-redis
+  tags.datadoghq.com/env: qa
+  tags.datadoghq.com/service: coto-redis
+  tags.datadoghq.com/version: 0.1.0
+image:
+  repository: redis
+  tag: latest
+  pullPolicy: IfNotPresent
+persistentVolumeClaim:
+  enabled: true
+  storageSize: 5Gi
+  storageClassName: gp3
+replicaCount: 1
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 80
+podSecurityContext: {}
+securityContext: {}
+service:
+  enabled: true
+  type: ClusterIP
+  port: 6379
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+volume:
+  name: secret-volume
+  mountPath: /mnt/app/conf
+  secretName: redis-secret
+secretObjects:
+  enabled: false
+  path: ""
+  name: {}
+ingress:
+  enabled: false
+  http:
+    paths: []
+resources:
+  limits:
+    cpu: "100m"
+    memory: "250Mi"
+  requests:
+    cpu: "100m"
+    memory: "250Mi"
+nodeSelector: {}
+tolerations: []
+affinity: {}

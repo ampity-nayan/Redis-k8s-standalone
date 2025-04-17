@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-pvc
+  namespace: {{ .Values.namespace }}
+spec:
+  accessModes:
+    - ReadWriteOnce  # Redis needs write access, and only one pod can access it at a time
+  resources:
+    requests:
+      storage: {{ .Values.persistentVolumeClaim.storageSize }}  # Uses the size from values.yaml
+  storageClassName: gp2  # Ensure the PVC is using the correct storage class
