@@ -5,8 +5,8 @@ metadata:
   namespace: {{ .Values.namespace }}
 spec:
   accessModes:
-    - ReadWriteOnce  # Redis needs write access, and only one pod can access it at a time
+    - ReadWriteOnce
   resources:
     requests:
-      storage: {{ .Values.persistentVolumeClaim.storageSize }}  # Uses the size from values.yaml
-  storageClassName: gp2  # Ensure the PVC is using the correct storage class
+      storage: {{ .Values.persistentVolumeClaim.storageSize }}
+  storageClassName: {{ .Values.persistentVolumeClaim.storageClass }}

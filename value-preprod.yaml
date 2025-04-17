@@ -9,8 +9,8 @@ image:
   tag: latest
   pullPolicy: IfNotPresent
 persistentVolumeClaim:
-  storageSize: 10Gi
-  storageClassName: gp3
+  storageSize: 8Gi
+  storageClass: gp2
 replicaCount: 2
 autoscaling:
   enabled: true
