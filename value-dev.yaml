@@ -19,7 +19,7 @@ service:
   port: 6379
 serviceAccount:
   create: false
-  name: {{ .Values.env }}-sa
+  name: dev-sa
 volume:
   name: secret-volume
   mountPath: /mnt/app/conf
