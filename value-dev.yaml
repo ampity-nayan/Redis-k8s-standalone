@@ -14,9 +14,11 @@ persistentVolumeClaim:
 replicaCount: 1
 autoscaling:
   enabled: false
+# Service Configuration
 service:
-  type: ClusterIP
-  port: 6379
+  enabled: true
+  type: ClusterIP  # or LoadBalancer if you want to expose the Redis service externally
+  port: 6379  
 serviceAccount:
   create: false
   name: dev-sa

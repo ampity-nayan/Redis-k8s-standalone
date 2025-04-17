@@ -17,9 +17,11 @@ autoscaling:
   minReplicas: 3
   maxReplicas: 6
   targetCPUUtilizationPercentage: 70
+# Service Configuration
 service:
-  type: ClusterIP
-  port: 6379
+  enabled: true
+  type: ClusterIP  # or LoadBalancer if you want to expose the Redis service externally
+  port: 6379  
 serviceAccount:
   create: false
   name: prod-sa
