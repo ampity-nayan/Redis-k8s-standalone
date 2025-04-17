@@ -11,12 +11,12 @@ image:
 persistentVolumeClaim:
   storageSize: 8Gi
   storageClass: gp2
-replicaCount: 2
+replicaCount: 1
 autoscaling:
   enabled: true
-  minReplicas: 2
-  maxReplicas: 4
-  targetCPUUtilizationPercentage: 75
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 80
 # Service Configuration
 service:
   enabled: true
@@ -28,7 +28,7 @@ serviceAccount:
 volume:
   name: secret-volume
   mountPath: /mnt/app/conf
-  secretName: redis-secret
+  secretName: ""
 secretObjects:
   enabled: false
   path: ""
