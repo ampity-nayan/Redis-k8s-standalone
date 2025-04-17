@@ -11,7 +11,7 @@ NAMESPACES=$(kubectl get ns -o jsonpath='{.items[*].metadata.name}')
 
 for ENV in "${ENVS[@]}"; do
   if echo "$NAMESPACES" | grep -qw "$ENV"; then
-    VALUES_FILE="$CHART_DIR/values-$ENV.yaml"
+    VALUES_FILE="$CHART_DIR/value-$ENV.yaml"
     if [[ -f "$VALUES_FILE" ]]; then
       echo "✅ Environment detected: $ENV"
       echo "🚀 Deploying Helm chart using AWS Secrets Manager and preconfigured service account..."
