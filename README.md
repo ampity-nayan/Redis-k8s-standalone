@@ -78,3 +78,51 @@ REDIS_PORT=6379
 ```
 
 Redis will require the password that was entered during `deploy.sh` execution.
+
+### Service Account Configuration
+
+This chart does not create a new ServiceAccount by default. Instead, it uses an existing one based on the environment.
+
+| Environment | Service Account Name |
+|-------------|-----------------------|
+| dev         | dev-sa                |
+| qa          | qa-sa                 |
+| preprod     | preprod-sa            |
+| prod        | prod-sa               |
+
+Make sure these ServiceAccounts exist in the target namespace before deploying.
+
+You can customize this using the following Helm values:
+
+```yaml
+serviceAccount:
+  create: false
+  name: <your-serviceaccount-name>
+```
+
+## AWS Secrets Manager Integration
+
+This chart uses [Secrets Store CSI Driver](https://secrets-store-csi-driver.sigs.k8s.io/) to fetch the Redis password securely from AWS Secrets Manager.
+
+### Required AWS Secret
+
+The Redis password must be stored in AWS Secrets Manager under the following path:
+- **Secret name**: `preprod/coto-redis/CONFIG`
+- **Secret key**: `REDIS_PASSWORD`
+
+The value will be mounted into the pod at `/mnt/app/conf/REDIS_PASSWORD`.
+
+### Service Account
+
+This chart does not create a new Kubernetes service account. Instead, it uses an existing IAM-integrated service account:
+- The service account name must match the environment (e.g., `qa-sa`, `preprod-sa`)
+- This service account must have IAM permissions to access the above AWS Secret
+
+Set the service account name in the appropriate values file (`values-qa.yaml`, `values-preprod.yaml`, etc.):
+
+```yaml
+serviceAccount:
+  name: qa-sa
+```
+
+Ensure your EKS cluster has the CSI driver and IRSA set up correctly.

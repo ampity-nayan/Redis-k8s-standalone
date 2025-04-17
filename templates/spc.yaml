@@ -4,6 +4,7 @@ metadata:
   name: {{ .Chart.Name }}-{{ .Values.namespace }}-spc
   namespace: {{ .Values.namespace }}
 spec:
+  serviceAccountName: {{ .Values.serviceAccount.name }}
   provider: aws
   secretObjects:
     {{- if .Values.secretObjects.name }}
@@ -29,3 +30,12 @@ spec:
       {{- else }}
         # Skip if no secrets
       {{- end }}
+
+
+      volumes:
+        - name: secrets-store
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: redis-aws-secrets
